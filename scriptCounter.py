@@ -156,7 +156,7 @@ with con:
 	cur.execute("CREATE TABLE Scripts(script text, count integer, value blob)")
 	for currBlock in range (minBlock, maxBlock+1):
 		url='https://blockchain.info/block-height/'+str(currBlock)+'?format=json'
-		time.sleep(.3)
+		time.sleep(.5)
 		print(url)
 		response = urllib.request.urlopen(url)
 		file = response.read()
