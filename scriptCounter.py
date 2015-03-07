@@ -5,6 +5,7 @@ import sys
 import json
 import urllib.request
 import re
+import time
 
 def opToName(c):
 	cprime=int(c, 16)
@@ -155,6 +156,7 @@ with con:
 	cur.execute("CREATE TABLE Scripts(script text, count integer, value blob)")
 	for currBlock in range (minBlock, maxBlock+1):
 		url='https://blockchain.info/block-height/'+str(currBlock)+'?format=json'
+		time.sleep(.3)
 		print(url)
 		response = urllib.request.urlopen(url)
 		file = response.read()
