@@ -153,18 +153,19 @@ maxBlock=int(sys.argv[3])
 con = lite.connect(dbName)
 with con:
 	cur = con.cursor()
-	cur.execute("CREATE TABLE Scripts(script text, count integer, value blob)")
+	cur.execute("CREATE TABLE IF NOT EXISTS Scripts(script text, count integer, value blob)")
 	for currBlock in range (minBlock, maxBlock+1):
 		url='https://blockchain.info/block-height/'+str(currBlock)+'?format=json'
 		print(url)
-		try:
-			response = urllib.request.urlopen(url)
-			file = response.read()
-		except urllib.error.HTTPError:
-			print("HTTPError, trying a second time after sleeping")
-			time.sleep(5)
-			response = urllib.request.urlopen(url)
-			file = response.read()
+		flag = 0
+		while flag == 0:
+			try:
+				response = urllib.request.urlopen(url)
+				file = response.read()
+				flag = 1
+			except urllib.error.HTTPError:
+				print("HTTPError, trying a second time after sleeping")
+				time.sleep(5)
 		text = file.decode('utf-8')
 		jData = json.loads(text)
 		txs = jData['blocks'][0]['tx']
