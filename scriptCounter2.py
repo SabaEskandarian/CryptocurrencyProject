@@ -156,15 +156,14 @@ with con:
 	cur = con.cursor()
 	cur.execute("CREATE TABLE Scripts(script text, count integer, value blob)")
 	for currBlock in range (minBlock, maxBlock+1):
+		if currBlock % 100 == 0:
+			print(currBlock)
 		url='https://blockchain.info/block-height/'+str(currBlock)+'?format=json'
 		block = subprocess.getoutput('bitcoin-cli getblock `bitcoin-cli getblockhash '+str(currBlock)+'`')
-		print(block)
 		jData = json.loads(block)
 		txs = jData['tx']
 		for transaction in txs:
-			print(transaction)
 			txText = subprocess.getoutput('bitcoin-cli decoderawtransaction `bitcoin-cli getrawtransaction '+transaction+'`')
-			print(txText)
 			tx = json.loads(txText)
 			outs = tx['vout']
 			for out in outs:
