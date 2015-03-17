@@ -163,7 +163,7 @@ with con:
 		jData = json.loads(block)
 		txs = jData['tx']
 		for transaction in txs:
-			txText = subprocess.getoutput('bitcoin-cli decoderawtransaction `bitcoin-cli getrawtransaction '+transaction+'`')
+			txText = subprocess.getoutput('bitcoin-cli getrawtransaction '+transaction+' 1')
 			tx = json.loads(txText)
 			outs = tx['vout']
 			for out in outs:
