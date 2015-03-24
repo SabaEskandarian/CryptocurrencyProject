@@ -157,8 +157,7 @@ with con:
 	cur = con.cursor()
 	cur.execute("CREATE TABLE Scripts(script text, count integer, value blob)")
 	for currBlock in range (minBlock, maxBlock+1):
-		if currBlock % 100 == 0:
-			print(currBlock)
+		print(currBlock)
 		block = subprocess.getoutput('bitcoin-cli getblock `bitcoin-cli getblockhash '+str(currBlock)+'`')
 		jData = json.loads(block)
 		txs = jData['tx']

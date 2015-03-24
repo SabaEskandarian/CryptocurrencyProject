@@ -12,7 +12,7 @@ def opToName(c):
 	if(cprime <= 75 and cprime >= 1):
 		return "DATA_"+str(cprime)
 	else:
-		return {
+		ret = {
 			"00": "OP_0",
 			"4c": "OP_PUSHDATA1",
 			"4d": "OP_PUSHDATA2",
@@ -22,18 +22,18 @@ def opToName(c):
       		        "52": "OP_2",
       		        "53": "OP_3",
        		        "54": "OP_4",
-                	"55": "OP_5",
-                	"56": "OP_6",
-                	"57": "OP_7",
-                	"58": "OP_8",
-                	"59": "OP_9",
-                	"5a": "OP_10",
-                	"5b": "OP_11",
-                	"5c": "OP_12",
-                	"5d": "OP_13",
-                	"5e": "OP_14",
-                	"5f": "OP_15",
-                	"60": "OP_16",
+               		"55": "OP_5",
+               		"56": "OP_6",
+               		"57": "OP_7",
+               		"58": "OP_8",
+               		"59": "OP_9",
+               		"5a": "OP_10",
+               		"5b": "OP_11",
+               		"5c": "OP_12",
+               		"5d": "OP_13",
+               		"5e": "OP_14",
+               		"5f": "OP_15",
+               		"60": "OP_16",
 			"61": "OP_NOP",
 			"63": "OP_IF",
 			"64": "OP_NOTIF",
@@ -108,7 +108,8 @@ def opToName(c):
 			"ad": "OP_CHECKSIGVERIFY",
 			"ae": "OP_CHECKMULTISIG",
 			"af": "OP_CHECKMULTISIGVERIFY"	
-		}[c]
+		}.get(c, "?")
+		return ret
 
 def cleanScript(script):
 	s=re.findall(r'..', script, re.DOTALL)
