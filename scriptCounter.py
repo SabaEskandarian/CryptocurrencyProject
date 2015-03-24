@@ -165,7 +165,10 @@ with con:
 				file = response.read()
 				flag = 1
 			except urllib.error.HTTPError:
-				print("HTTPError, trying a second time after sleeping")
+				print("HTTPError, trying again after sleeping")
+				time.sleep(5)
+			except:
+				print("Unexpected Error, trying again after sleeping")
 				time.sleep(5)
 		text = file.decode('utf-8')
 		jData = json.loads(text)
