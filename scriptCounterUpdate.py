@@ -149,12 +149,26 @@ def insertData(script, value, cur, con):
 	con.commit()
 
 dbName=sys.argv[1]
-minBlock=int(sys.argv[2])
-maxBlock=int(sys.argv[3])
+url1="https://blockchain.info/latestblock"
+response1 = urllib.request.urlopen(url1)
+file1 = response1.read()
+text1 = file1.decode('utf-8')
+jData1 = json.loads(text1)
+maxBlock = jData1['height']
 con = lite.connect(dbName)
 with con:
 	cur = con.cursor()
+	cur.execute("CREATE TABLE IF NOT EXISTS Max(num integer)")
+	cur.execute("SELECT num FROM Max ORDER by num DESC")
+	con.commit()
+	row = cur.fetchone()
+	if row is not None:
+		minBlock = row[0]+1
+	else:
+		minBlock = 0
 	cur.execute("CREATE TABLE IF NOT EXISTS Scripts(script text, count integer, value blob)")
+	print("minBlock: "+str(minBlock))
+	print("maxBlock: "+str(maxBlock))
 	for currBlock in range (minBlock, maxBlock+1):
 		url='https://blockchain.info/block-height/'+str(currBlock)+'?format=json'
 		print(url)
@@ -180,6 +194,8 @@ with con:
 				script = out['script']
 			insertData(cleanScript(script), val, cur, con)
 
+	cur.execute("INSERT INTO Max(num) VALUES (?)", [maxBlock])
+	con.commit()
 	with open('by_value.txt', 'w') as outFile:
 		cur.execute("SELECT script, value, count FROM Scripts ORDER BY value DESC")
 		con.commit()
