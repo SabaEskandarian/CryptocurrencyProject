@@ -117,16 +117,16 @@ def cleanScript(script):
 	for i in range(0, len(s)):
 		num = int(s[i], 16)
 		if num <= 75 and num >= 1 and i not in marked:
-			for j in range (1, num+1):
+			for j in range (1, min(num+1, len(s)-i)):
 				marked.append(i+j)
 		elif num == 76 and i not in marked:
-			for j in range (1, int(s[i+1], 16)+2):
+			for j in range (1, min(int(s[i+1], 16)+2, len(s)-i)):
 				marked.append(i+j)
 		elif num == 77 and i not in marked:
-			for j in range (1, int("".join([s[i+1], s[i+2]]), 16)+3):
+			for j in range (1, min(int("".join([s[i+1], s[i+2]]), 16)+3, len(s)-i)):
 				marked.append(i+j)
 		elif num == 78 and i not in marked:
-			for j in range (1, int("".join([s[i+1], s[i+2], s[i+3], s[i+4]]), 16)+5):
+			for j in range (1, min(int("".join([s[i+1], s[i+2], s[i+3], s[i+4]]), 16)+5, len(s)-i)):
 				marked.append(i+j)
 	for i in reversed(marked):
 		del s[i]

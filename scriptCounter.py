@@ -112,26 +112,34 @@ def opToName(c):
 		return ret
 
 def cleanScript(script):
+	print("cleanScript\n") 
+	print(script)
 	s=re.findall(r'..', script, re.DOTALL)
 	marked = []
 	for i in range(0, len(s)):
 		num = int(s[i], 16)
 		if num <= 75 and num >= 1 and i not in marked:
-			for j in range (1, num+1):
+			print("debug1")
+			for j in range (1, min(num+1, len(s)-i)):
 				marked.append(i+j)
 		elif num == 76 and i not in marked:
-			for j in range (1, int(s[i+1], 16)+2):
+			print("debug2")
+			for j in range (1, min(int(s[i+1], 16)+2, len(s)-i)):
 				marked.append(i+j)
 		elif num == 77 and i not in marked:
-			for j in range (1, int("".join([s[i+1], s[i+2]]), 16)+3):
+			print("debug3")
+			for j in range (1, min(int("".join([s[i+1], s[i+2]]), 16)+3, len(s)-i)):
 				marked.append(i+j)
 		elif num == 78 and i not in marked:
-			for j in range (1, int("".join([s[i+1], s[i+2], s[i+3], s[i+4]]), 16)+5):
+			print("debug4")
+			for j in range (1, min(int("".join([s[i+1], s[i+2], s[i+3], s[i+4]]), 16)+5, len(s)-i)):
 				marked.append(i+j)
+	print("mid cleanScript\n")
 	for i in reversed(marked):
 		del s[i]
 	for i in range(0, len(s)):
 		s[i]=opToName(s[i])
+	print("end cleanScript\n")
 	return " ".join(s)
 
 def insertData(script, value, cur, con):
@@ -139,6 +147,7 @@ def insertData(script, value, cur, con):
 	con.commit()
 	row = cur.fetchone()
 	val = value
+	print(val) 
 	count = 1
 	if row is not None:
 		val+=row[0]
@@ -174,6 +183,7 @@ with con:
 				print("Unexpected Error, trying again after sleeping")
 				time.sleep(5)
 		for tx in txs:
+			print(tx)
 			outs = tx['out']
 			for out in outs:
 				val = out['value']
