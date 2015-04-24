@@ -148,6 +148,21 @@ def insertData(script, value, cur, con):
 		cur.execute("INSERT INTO Scripts(script, value, count) VALUES (?, ?, ?)", (script, val, count))
 	con.commit()
 
+def isInteresting(script):
+	if(script == "OP_DUP OP_HASH160 DATA_20 OP_EQUALVERIFY OP_CHECKSIG"):
+		return 0
+	if(script == "OP_HASH160 DATA_20 OP_EQUAL"):
+		return 0
+	if(script == "DATA_65 OP_CHECKSIG"):
+		return 0
+	if(script == "DATA_33 OP_CHECKSIG"):
+		return 0
+	return 1
+
+def storeTransaction(script, block, value, txhash, cur, con):
+	cur.execute("INSERT INTO Special(script, block, value, txhash) VALUES (?, ?, ?, ?)", (script, block, value, txhash))
+	con.commit()
+
 dbName=sys.argv[1]
 url1="https://blockchain.info/latestblock"
 response1 = urllib.request.urlopen(url1)
@@ -158,6 +173,7 @@ maxBlock = jData1['height']
 con = lite.connect(dbName)
 with con:
 	cur = con.cursor()
+	cur.execute("CREATE TABLE IF NOT EXISTS Special(script, block, value, txhash)")
 	cur.execute("CREATE TABLE IF NOT EXISTS Max(num integer)")
 	cur.execute("SELECT num FROM Max ORDER by num DESC")
 	con.commit()
@@ -188,11 +204,15 @@ with con:
 				print("Unexpected Error, trying again after sleeping")
 				time.sleep(5)
 		for tx in txs:
+			txhash= tx['hash']
 			outs = tx['out']
 			for out in outs:
 				val = out['value']
 				script = out['script']
-			insertData(cleanScript(script), val, cur, con)
+				cleanedScript = cleanScript(script)
+			insertData(cleanedScript, val, cur, con)
+			if(isInteresting(cleanedScript)):
+				storeTransaction(cleanedScript, currBlock, val, txhash, cur, con)
 
 	cur.execute("INSERT INTO Max(num) VALUES (?)", [maxBlock])
 	con.commit()
