@@ -1,6 +1,5 @@
 #!/bin/bash
-
-PATHTOSCRIPT=/home/saba/temp
+#run this from the folder where you want the files to be located
 
 #get files
 wget https://raw.githubusercontent.com/SabaEskandarian/CryptocurrencyProject/master/web/by_count.txt
@@ -12,6 +11,6 @@ wget https://raw.githubusercontent.com/SabaEskandarian/CryptocurrencyProject/mas
 
 #add cron job
 crontab -l > thecronfile
-echo "@daily python $PATHTOSCRIPT/scriptCounterUpdate.py $PATHTOSCRIPT/data.db" >> thecronfile
+echo "@daily python `pwd`/scriptCounterUpdate.py `pwd`/data.db" >> thecronfile
 crontab thecronfile
 rm thecronfile

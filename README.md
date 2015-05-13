@@ -15,4 +15,7 @@ creates database in the db file name specified that has information for up to th
 
 All the files needed to run the web page are found in the web/ folder of this repository. They can simply be pasted onto a web server. In order to keep the data up to date, a cron job should be added to run the script as described above once a day or once a week.
 
-The web page has a graph that shows the most common unusual transactions as well as a table of all unusual transactions and links to the scripts' aggregate data on frequency of use and amount of bitcoin transferred (in satoshi) for each type of transaction. The graph and table on the web page can be set to give data about only a specified span of blocks. 
+The web page has a graph that shows the most common unusual transactions as well as a table of all unusual transactions and links to the scripts' aggregate data on frequency of use and amount of bitcoin transferred (in satoshi) for each type of transaction. The graph and table on the web page can be set to give data about only a specified span of blocks.
+
+###Setup
+In order to set up the web page on your own server, simply run the provided setup script from the folder where you want the files to be located.
